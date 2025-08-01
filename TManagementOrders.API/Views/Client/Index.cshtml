@@ -1,0 +1,43 @@
+﻿@using TManagementOrders.Domain.Entities
+@model Client
+
+@{
+    ViewData["Title"] = "Register Client";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" type="email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Telephone" class="control-label"></label>
+        <input asp-for="Telephone" class="form-control" type="number" />
+        <span asp-validation-for="Telephone" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateRegister" class="control-label"></label>
+        <input asp-for="DateRegister" class="form-control" type="datetime-local" />
+        <span asp-validation-for="DateRegister" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
