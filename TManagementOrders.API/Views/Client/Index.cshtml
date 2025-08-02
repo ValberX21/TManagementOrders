@@ -1,43 +1,79 @@
 ﻿@using TManagementOrders.Domain.Entities
-@model Client
+@model ClientFilterViewModel
 
 @{
-    ViewData["Title"] = "Register Client";
+    ViewData["Title"] = "Lista de Clientes";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<form asp-action="Register" method="post">
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Clientes</h2>
+        <a asp-action="GotoCreateClintPage"
+           asp-controller="Client"
+           class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Novo Cliente
+        </a>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" type="email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-10">
+                <input type="text"
+                       name="filter"
+                       value="@Model.Filter"
+                       class="form-control"
+                       placeholder="Filtrar por Nome ou Email..." />
+            </div>
+            <div class="col-md-2 text-end">
+                <button type="submit" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+            </div>
+        </div>
+    </form>
 
-    <div class="form-group">
-        <label asp-for="Telephone" class="control-label"></label>
-        <input asp-for="Telephone" class="form-control" type="number" />
-        <span asp-validation-for="Telephone" class="text-danger"></span>
-    </div>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>               
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Data de Registro</th>
+                <th>Editar</th>
+                <th>Deletar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in Model.Clients)
+            {
+                <tr>
+                    <td>@client.Name</td>
+                    <td>@client.Email</td>
+                    <td>@client.Telephone</td>
+                    <td>@client.DateRegister.ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">
+                        <a asp-action="GotoEditClintPage"
+                           asp-controller="Client"
+                           asp-route-id="@client.Id"
+                           class="btn btn-sm btn-outline-primary"
+                           title="Editar cliente">
+                            <i class="bi bi-journal-text"></i>
+                        </a>
+                    </td>
 
-    <div class="form-group">
-        <label asp-for="DateRegister" class="control-label"></label>
-        <input asp-for="DateRegister" class="form-control" type="datetime-local" />
-        <span asp-validation-for="DateRegister" class="text-danger"></span>
-    </div>
+                    <td class="text-center">
+                        <a asp-action="DeleteConfirmed"
+                           asp-controller="Client"
+                           asp-route-id="@client.Id"
+                           class="btn btn-sm btn-outline-danger"
+                           title="Excluir cliente"
+                           onclick="return confirm('Tem certeza que deseja excluir este cliente?');">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
 
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
-
+                </tr>
+            }
+        </tbody>  
+    </table>
+</div>

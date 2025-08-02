@@ -19,22 +19,23 @@ namespace TManagementOrders.Application.Service
 
         public Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            return _clientRepository.DeleteAsync(id);
         }
 
         public Task<IEnumerable<Client>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return _clientRepository.GetAllAsync();
         }
 
-        public Task<Client?> GetByIdAsync(int id)
+        public async Task<Client?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _clientRepository.GetByIdAsync(id);
         }
 
-        public Task UpdateAsync(Client property)
+        public async Task<int> UpdateAsync(Client entity)
         {
-            throw new NotImplementedException();
+            int rowUpdate = await _clientRepository.UpdateAsync(entity);
+            return rowUpdate;
         }
     }
 }

@@ -1,0 +1,62 @@
+﻿@using TManagementOrders.Domain.Entities
+@model Client
+
+@{
+    bool isEdit = Model?.Id > 0;
+    ViewData["Title"] = isEdit ? "Editar cliente" : "Criar novo cliente";
+    string formAction = isEdit ? "EditClient" : "CreateClient";
+    string buttonLabel = isEdit ? "Atualizar" : "Registrar";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">@ViewData["Title"]</h2>
+
+                    <form asp-action="@formAction" method="post">
+                        @if (isEdit)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                        }
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Telephone" class="control-label"></label>
+                            <input asp-for="Telephone" class="form-control" type="number" />
+                            <span asp-validation-for="Telephone" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="DateRegister" class="control-label"></label>
+                            <input asp-for="DateRegister" class="form-control" type="date" />
+                            <span asp-validation-for="DateRegister" class="text-danger"></span>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary w-100">@buttonLabel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

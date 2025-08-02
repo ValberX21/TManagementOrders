@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using TManagementOrders.Domain.Interfaces;
 using TManagementOrders.Infrastructure.Data;
+using static Dapper.SqlMapper;
 
 namespace TManagementOrders.Infrastructure.Repositories
 {
@@ -13,11 +14,21 @@ namespace TManagementOrders.Infrastructure.Repositories
             _context = context;
         }
 
-        public Task<int> AddAsync(T property)
+        public async Task<int> AddAsync(T entity)
         {
-            var sql = $"INSERT INTO [{typeof(T).Name}] VALUES (@Property)";
+            var properties = typeof(T)
+                                    .GetProperties()
+                                    .Where(p => p.Name.ToLower() != "id") 
+                                    .ToList();
+
+            var columnNames = string.Join(", ", properties.Select(p => $"[{p.Name}]"));
+
+            var parameterNames = string.Join(", ", properties.Select(p => $"@{p.Name}"));
+
+            var sql = $"INSERT INTO [{typeof(T).Name}] ({columnNames}) VALUES ({parameterNames})";
+
             using var connection = _context.CreateConnection();
-            throw new NotImplementedException();
+            return await connection.ExecuteAsync(sql, entity);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -34,9 +45,19 @@ namespace TManagementOrders.Infrastructure.Repositories
             return await connection.QueryFirstOrDefaultAsync<T>(sql, new { Id = id });
         }
 
-        public Task UpdateAsync(T property)
+        public async Task<int> UpdateAsync(T entity)
         {
-            throw new NotImplementedException();
+            var type = typeof(T);
+            var tableName = $"[{type.Name}]";
+            var properties = type.GetProperties()
+                                 .Where(p => p.Name != "Id")
+                                 .ToList();
+
+            var setClause = string.Join(", ", properties.Select(p => $"{p.Name} = @{p.Name}"));
+            var sql = $"UPDATE {tableName} SET {setClause} WHERE Id = @Id";
+
+            using var connection = _context.CreateConnection();
+            return await connection.ExecuteAsync(sql, entity);
         }
 
         public async Task DeleteAsync(int id)
