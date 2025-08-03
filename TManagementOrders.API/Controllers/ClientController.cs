@@ -10,7 +10,7 @@ namespace TManagementOrders.API.Controllers
 
         public ClientController(ClientService clientService)
         {
-          
+
             _clientService = clientService;
         }
 
@@ -46,9 +46,9 @@ namespace TManagementOrders.API.Controllers
         public async Task<IActionResult> CreateClient([FromBody] Client client)
         {
             if (!ModelState.IsValid)
-                return View(client); 
-            
-            await _clientService.AddAsync(client);           
+                return View(client);
+
+            await _clientService.AddAsync(client);
             return RedirectToAction("Index");
         }
 
@@ -66,7 +66,7 @@ namespace TManagementOrders.API.Controllers
         public async Task<IActionResult> GotoEditClintPage(int id)
         {
             var client = await _clientService.GetByIdAsync(id);
-            if(client == null)
+            if (client == null)
                 return NotFound();
 
             return View("CreateUpdateClient", client);
@@ -77,6 +77,18 @@ namespace TManagementOrders.API.Controllers
         {
             await _clientService.DeleteAsync(id);
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchClient(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest("Name cannot be empty");
+
+            var client = await _clientService.GetByNameAsync(name);
+            if (client == null)
+                return NotFound();
+            return Ok(client);
         }
     }
 }

@@ -1,41 +1,49 @@
 ﻿using TManagementOrders.Domain.Entities;
 using TManagementOrders.Domain.Interfaces;
+using TManagementOrders.Infrastructure.Repositories;
 
 namespace TManagementOrders.Application.Service
 {
     public class ClientService 
     {
-        private readonly IBaseInterface<Client> _clientRepository;
+        private readonly IBaseInterface<Client> _baseRepository;
+        private readonly ClientRepository _clientRepository;
 
-        public ClientService(IBaseInterface<Client> baseRepository)
+        public ClientService(IBaseInterface<Client> baseRepository, ClientRepository clientRepository)
         {
-            _clientRepository = baseRepository;
+            _clientRepository = clientRepository;
+            _baseRepository = baseRepository;
         }
 
         public Task<int> AddAsync(Client client)
         {
-            return _clientRepository.AddAsync(client);
+            return _baseRepository.AddAsync(client);
         }
 
         public Task DeleteAsync(int id)
         {
-            return _clientRepository.DeleteAsync(id);
+            return _baseRepository.DeleteAsync(id);
         }
 
         public Task<IEnumerable<Client>> GetAllAsync()
         {
-            return _clientRepository.GetAllAsync();
+            return _baseRepository.GetAllAsync();
         }
 
         public async Task<Client?> GetByIdAsync(int id)
         {
-            return await _clientRepository.GetByIdAsync(id);
+            return await _baseRepository.GetByIdAsync(id);
         }
 
         public async Task<int> UpdateAsync(Client entity)
         {
-            int rowUpdate = await _clientRepository.UpdateAsync(entity);
+            int rowUpdate = await _baseRepository.UpdateAsync(entity);
             return rowUpdate;
+        }
+
+        public async Task<Client?> GetByNameAsync(string name)
+        {
+            return await _clientRepository.GetByNameAsync(name);
         }
     }
 }

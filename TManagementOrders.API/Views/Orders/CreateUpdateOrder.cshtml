@@ -1,0 +1,87 @@
+﻿@using TManagementOrders.Domain.Entities
+@model Orders
+
+@{
+    ViewData["Title"] = "Criar Pedido";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Criar Pedido</h2>
+
+    <div class="mb-3">
+        <label for="clientSearch" class="form-label">Buscar Cliente</label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="clientSearch" placeholder="Digite o nome do cliente..." />
+            <input type="hidden" id="selectedClientId" name="ClientId" />
+            <button type="button" class="btn btn-outline-secondary" id="btnSearchClient">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </div> 
+
+    <!-- Buscar Produto + Adicionar -->
+   @*  <div class="mb-3">
+        <label for="productSearch" class="form-label">Buscar Produto</label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="productSearch" placeholder="Digite o nome do produto..." />
+            <button type="button" class="btn btn-outline-success" id="btnAddProduct">
+                <i class="bi bi-plus-circle"></i> Adicionar
+            </button>
+        </div>
+    </div> *@
+
+    <!-- GRID de Itens do Pedido -->
+@*     <div class="mb-4">
+        <label class="form-label">Itens do Pedido</label>
+        <table class="table table-bordered table-striped" id="orderItemsGrid">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unitário</th>
+                    <th>Subtotal</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- JavaScript irá preencher -->
+            </tbody>
+        </table>
+    </div> *@
+
+    <!-- Botão Criar Pedido -->
+   @*  <div class="text-center">
+        <button type="submit" class="btn btn-primary" id="btnCreateOrder">
+            <i class="bi bi-check-lg"></i> Criar Pedido
+        </button>
+    </div> *@
+</div>
+
+
+@section Scripts {
+    <script>
+        document.getElementById("btnSearchClient").addEventListener("click", async function () {
+            const input = document.getElementById("clientSearch");
+            const query = input.value;
+
+            try {
+                const response = await fetch(`/Client/SearchClient?name=${encodeURIComponent(query)}`);
+
+                if (!response.ok) {
+                    alert("Cliente não encontrado.");
+                    return;
+                }
+
+                const client = await response.json();
+
+                input.value = client.name; 
+
+                document.getElementById("selectedClientId").value = client.id;
+
+            } catch (error) {
+                console.error("Erro ao buscar cliente:", error);
+                alert("Erro ao buscar cliente.");
+            }
+        });
+    </script>
+}
