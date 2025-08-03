@@ -10,9 +10,9 @@ namespace TManagementOrders.Application.Service
         private readonly ClientRepository _clientRepository;
 
         public ClientService(IBaseInterface<Client> baseRepository, ClientRepository clientRepository)
-        {
-            _clientRepository = clientRepository;
+        {           
             _baseRepository = baseRepository;
+            _clientRepository = clientRepository;
         }
 
         public Task<int> AddAsync(Client client)

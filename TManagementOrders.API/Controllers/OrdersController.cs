@@ -12,7 +12,7 @@ namespace TManagementOrders.API.Controllers
         [HttpGet]
         public IActionResult GotoCreateOrderPage()
         {
-            return View("CreateUpdateOrder");
+            return View("CreateOrder");
         }
     }
 }

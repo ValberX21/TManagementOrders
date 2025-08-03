@@ -79,5 +79,15 @@ namespace TManagementOrders.API.Controllers
 
             return View("CreateUpdateProduct", product);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchProduct(string name)
+        {
+            var product = await _productService.GetByNameAsync(name);
+            
+            if (product == null)
+                return NotFound();
+            return Ok(product);
+        }
     }
 }

@@ -15,6 +15,7 @@ builder.Services.AddScoped<IBaseInterface<Client>, BaseRepository<Client>>();
 builder.Services.AddScoped<IBaseInterface<Product>, BaseRepository<Product>>();
 
 builder.Services.AddScoped<ClientRepository>();
+builder.Services.AddScoped<ProductRepository>();
 
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<ClientService>();
