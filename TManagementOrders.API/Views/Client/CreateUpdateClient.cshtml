@@ -4,8 +4,7 @@
 @{
     bool isEdit = Model?.Id > 0;
     ViewData["Title"] = isEdit ? "Editar cliente" : "Criar novo cliente";
-    string formAction = isEdit ? "EditClient" : "CreateClient";
-    string buttonLabel = isEdit ? "Atualizar" : "Registrar";
+    string buttonLabel = isEdit ? "Atualizar cliente" : "Registrar cliente";
 }
 
 <div class="container mt-5">
@@ -15,33 +14,33 @@
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4">@ViewData["Title"]</h2>
 
-                    <form asp-action="@formAction" method="post">
+                    <form id="clientForm">
                         @if (isEdit)
                         {
-                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="Id" id="Id" />
                         }
 
                         <div class="form-group mb-3">
                             <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" class="form-control" />
+                            <input asp-for="Name" class="form-control" id="Name" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-3">
                             <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" type="email" />
+                            <input asp-for="Email" class="form-control" type="email" id="Email" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-3">
                             <label asp-for="Telephone" class="control-label"></label>
-                            <input asp-for="Telephone" class="form-control" type="number" />
+                            <input asp-for="Telephone" class="form-control" type="number" id="Telephone" />
                             <span asp-validation-for="Telephone" class="text-danger"></span>
                         </div>
 
                         <div class="form-group mb-4">
                             <label asp-for="DateRegister" class="control-label"></label>
-                            <input asp-for="DateRegister" class="form-control" type="date" />
+                            <input asp-for="DateRegister" class="form-control" type="date" id="DateRegister" />
                             <span asp-validation-for="DateRegister" class="text-danger"></span>
                         </div>
 
@@ -49,6 +48,7 @@
                             <button type="submit" class="btn btn-primary w-100">@buttonLabel</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -56,7 +56,46 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.getElementById("clientForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+
+            const client = {
+                id: parseInt(document.getElementById("Id")?.value || 0),
+                name: document.getElementById("Name").value,
+                email: document.getElementById("Email").value,
+                telephone: document.getElementById("Telephone").value,
+                dateRegister: document.getElementById("DateRegister").value
+            };
+
+            const isEdit = client.id > 0;
+            const url = isEdit
+                ? `/Client/EditClient/${client.id}`
+                : `/Client/CreateClient`;
+
+            const method = isEdit ? "PUT" : "POST";
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(client)
+                });
+
+                if (response.ok) {                    
+                    window.location.href = "/Client/Index";
+                } else {
+                    console.log("Erro ao salvar cliente.");
+                }
+            } catch (err) {
+                console.log(err);                
+            }
+        });
+    </script>
 }

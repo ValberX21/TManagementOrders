@@ -43,7 +43,7 @@ namespace TManagementOrders.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateClient(Client client)
+        public async Task<IActionResult> CreateClient([FromBody] Client client)
         {
             if (!ModelState.IsValid)
                 return View(client); 
@@ -53,13 +53,13 @@ namespace TManagementOrders.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditClient(Client client)
+        public async Task<IActionResult> EditClient(int id, [FromBody] Client client)
         {
-            if (!ModelState.IsValid)
-                return View(client);
+            if (id != client.Id)
+                return BadRequest();
 
             await _clientService.UpdateAsync(client);
-            return RedirectToAction("Index");
+            return Ok();
         }
 
         [HttpGet]
@@ -73,10 +73,10 @@ namespace TManagementOrders.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteClient(int id)
         {
             await _clientService.DeleteAsync(id);
-            return RedirectToAction("Index");
+            return Ok();
         }
     }
 }

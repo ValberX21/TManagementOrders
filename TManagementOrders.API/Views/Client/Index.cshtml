@@ -62,14 +62,11 @@
                     </td>
 
                     <td class="text-center">
-                        <a asp-action="DeleteConfirmed"
-                           asp-controller="Client"
-                           asp-route-id="@client.Id"
-                           class="btn btn-sm btn-outline-danger"
-                           title="Excluir cliente"
-                           onclick="return confirm('Tem certeza que deseja excluir este cliente?');">
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="deleteClient(@client.Id, this)"
+                                title="Excluir cliente">
                             <i class="bi bi-trash"></i>
-                        </a>
+                        </button>
                     </td>
 
                 </tr>
@@ -77,3 +74,29 @@
         </tbody>  
     </table>
 </div>
+
+
+@section Scripts {
+    <script>
+        async function deleteClient(id, button) {
+            const confirmDelete = confirm("Tem certeza que deseja excluir este cliente?");
+            if (!confirmDelete) return;
+
+            try {
+                const response = await fetch(`/Client/DeleteClient/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    const row = button.closest('tr');
+                    row.remove();
+                } else {
+                    console.log("Erro ao excluir cliente.");
+                }
+            } catch (error) {
+                console.error(error);
+                 console.log("Erro ao comunicar com o servidor.");
+            }
+        }
+    </script>
+}
