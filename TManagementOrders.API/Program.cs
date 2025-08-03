@@ -12,6 +12,8 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IBaseInterface<Client>, BaseRepository<Client>>();
+builder.Services.AddScoped<IBaseInterface<Product>, BaseRepository<Product>>();
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<DapperContext>();
 var app = builder.Build();

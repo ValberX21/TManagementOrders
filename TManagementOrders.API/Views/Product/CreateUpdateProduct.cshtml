@@ -1,0 +1,101 @@
+﻿@using TManagementOrders.Domain.Entities
+@model Product
+
+@{
+    bool isEdit = Model?.Id > 0;
+    ViewData["Title"] = isEdit ? "Editar produto" : "Criar novo produto";
+    string formAction = isEdit ? "EditProduct" : "CreateProduct";
+    string buttonLabel = isEdit ? "Atualizar" : "Criar Produto";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">@ViewData["Title"]</h2>
+
+                    <form id="productForm">
+                        @if (isEdit)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                        }
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" id="Name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3" id="Description"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input asp-for="Price" class="form-control" type="number" step="0.01" id="Price"/>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Quantity" class="control-label"></label>
+                            <input asp-for="Quantity" class="form-control" type="number" id="Quantity" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary w-100">@buttonLabel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.getElementById("productForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+
+            const product = {
+                id: parseInt(document.getElementById("Id")?.value || 0),
+                name: document.getElementById("Name").value,
+                description: document.getElementById("Description").value,
+                price: document.getElementById("Price").value,
+                quantity: document.getElementById("Quantity").value
+            };
+
+            const isEdit = product.id > 0;
+            const url = isEdit
+                ? `/Product/EditProduct/${product.id}`
+                : `/Product/CreateProduct`;
+
+            const method = isEdit ? "PUT" : "POST";
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(product)
+                });
+
+                if (response.ok) {
+                    window.location.href = "/Product/Index";
+                } else {
+                    console.log("Erro ao salvar produto.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    </script>
+}
