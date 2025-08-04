@@ -15,9 +15,9 @@ namespace TManagementOrders.Application.Service
             _clientRepository = clientRepository;
         }
 
-        public Task<int> AddAsync(Client client)
+        public async Task<int> AddAsync(Client client)
         {
-            return _baseRepository.AddAsync(client);
+            return await _baseRepository.AddAsync(client);
         }
 
         public Task DeleteAsync(int id)

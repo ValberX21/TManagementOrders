@@ -137,7 +137,7 @@
                 const productPrice = document.getElementById("selectedProductPrice").value;
 
                 var newItem = {
-                    productId: productId,
+                    IdProduct: productId,
                     productName: productName,
                     quantity: 1,
                     unitPrice: parseFloat(productPrice)
@@ -198,6 +198,56 @@
                  document.getElementById("productSearch").value = '';
                  document.getElementById("selectedProductPrice").value = '';
             }
+
+            document.getElementById("btnCreateOrder").addEventListener("click", async function (e) {
+
+                console.log("List - ", orderItems);
+                e.preventDefault();
+
+                const clientId = document.getElementById("selectedClientId").value;
+                if (!clientId) 
+                {
+                    alert("Selecione um cliente antes de criar o pedido.");
+                    return;
+                }
+
+                if (orderItems.length === 0) {
+                    alert("Adicione ao menos um produto ao pedido.");
+                    return;
+                }
+
+                const totalText = document.getElementById("orderTotal").textContent.replace("R$", "").trim().replace(",", ".");
+                const total = parseFloat(totalText);
+
+                const itensOrder = 
+                {
+                    IdClient : clientId,
+                    Total :    total,
+                    OrderItems : orderItems
+                };
+
+               try {
+                    const response = await fetch("/Orders/CreateOrder", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(itensOrder)
+                    });
+
+                    if (response.ok) {
+                        alert("Pedido criado com sucesso!");
+                        window.location.href = "/Orders"; // redirect to order list, for example
+                    } else {
+                        const errorText = await response.text();
+                        alert("Erro ao criar pedido: " + errorText);
+                    }
+                } catch (error) {
+                    console.error("Erro ao enviar pedido:", error);
+                    alert("Erro inesperado ao criar o pedido.");
+                }
+
+            });
 
             window.removeItem = function(index) {
                 orderItems.splice(index, 1);

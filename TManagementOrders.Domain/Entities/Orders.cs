@@ -6,9 +6,9 @@ namespace TManagementOrders.Domain.Entities
     {
         public int Id { get; set; }
         public int IdClient { get; set; }
-        public DateTime DataPedido { get; set; }
+        public DateTime DataPedido { get; set; } = DateTime.Now;
         public decimal Total { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-        public StatusOrder Status { get; set; }
+        public StatusOrder Status { get; set; } =  StatusOrder.NEW;
     }
 }
