@@ -5,7 +5,8 @@
     ViewData["Title"] = "Criar Pedido";
 }
 
-<div class="container mt-5">
+<div class="mb-4 mt-4">
+
     <h2 class="mb-4 text-center">Criar Pedido</h2>
 
     <div class="mb-3">
@@ -36,7 +37,6 @@
         </div>
     </div> 
 
-    <!-- GRID de Itens do Pedido -->
      <div class="mb-4">
         <label class="form-label">Itens do Pedido</label>
         <table class="table table-bordered table-striped" id="orderItemsGrid">
@@ -46,7 +46,7 @@
                     <th>Produto</th>
                     <th>Quantidade</th>
                     <th>Preço Unitário</th>    
-                    <th>Adicionar</th>
+                    <th>Preço total</th>
                     <th>Remover</th>
                 </tr>
             </thead>
@@ -54,23 +54,21 @@
                
             </tbody>
         </table>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <button type="submit" class="btn btn-primary" id="btnCreateOrder">
+                <i class="bi bi-check-lg"></i> Criar Pedido
+            </button>
+            <h4><strong>TOTAL DO PEDIDO: <span id="orderTotal">R$ 0,00</span></strong></h4>           
+        </div>
     </div> 
-
-    <!-- Botão Criar Pedido -->
-   @*  <div class="text-center">
-        <button type="submit" class="btn btn-primary" id="btnCreateOrder">
-            <i class="bi bi-check-lg"></i> Criar Pedido
-        </button>
-    </div> *@
 </div>
-
 
 @section Scripts {
     <script>      
 
         document.addEventListener("DOMContentLoaded", function () {
 
-             const orderItems = [];
+            const orderItems = [];
 
             document.getElementById("btnSearchClient").addEventListener("click", async function () {
                 const input = document.getElementById("clientSearch");
@@ -98,7 +96,6 @@
                 const input = document.getElementById("productSearch");
                 
                 const query = input.value;
-                console.log('Name Prod '+query);
                 try {
                     const response = await fetch(`/Product/SearchProduct?name=${encodeURIComponent(query)}`);
                     if (!response.ok) {
@@ -117,9 +114,25 @@
                 }
             });
 
-             document.getElementById("btnAddProduct").addEventListener("click", async function () {
-                 
+            document.getElementById("btnAddProduct").addEventListener("click", async function () {                               
+
+
                 const productId = document.getElementById("selectedProductId").value;
+
+                if(!productId)
+                {
+                     alert('Favor busque um produto antes de adicionar ao pedido !')
+                     return
+                }
+
+                if(orderItems.find(i => i.productId == productId))
+                {
+                     alert('Produto ja adionado ao pedido')
+                     clearDataAfterAddProduct();
+                     return
+                }
+                    
+               
                 const productName = document.getElementById("productSearch").value;
                 const productPrice = document.getElementById("selectedProductPrice").value;
 
@@ -127,15 +140,71 @@
                     productId: productId,
                     productName: productName,
                     quantity: 1,
-                    price: productPrice // Placeholder for unit price
+                    unitPrice: parseFloat(productPrice)
                 }
 
-                orderItems.push(newItem);
+                 orderItems.push(newItem);
 
                  updateOrderTable();
-               
-             })
-        }); 
+
+                 clearDataAfterAddProduct();
+            })
+
+            function updateOrderTable() 
+            {
+                const tbody = document.querySelector("#orderItemsGrid tbody");
+                tbody.innerHTML = "";
+
+                orderItems.forEach((item, index) => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${item.productName}</td>
+                        <td><input type="number" class="form-control quantity-input" data-index="${index}" value="${item.quantity}" min="1" /></td>
+                        <td>R$ ${item.unitPrice.toFixed(2)}</td>
+                        <td>R$ ${(item.unitPrice * item.quantity).toFixed(2)}</td>
+                        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(${index})">Remover</button></td>
+                    `;
+
+                    tbody.appendChild(row);
+                });
+
+                const totalOrder = orderItems.reduce((sum, item) => {
+                    return sum + (item.quantity * item.unitPrice);
+                }, 0);
+
+                console.log(totalOrder);
+
+                document.getElementById("orderTotal").textContent = `R$ ${totalOrder.toFixed(2)}`;
+                attachQuantityChangeHandlers();
+            }
+
+            function attachQuantityChangeHandlers() {
+                document.querySelectorAll(".quantity-input").forEach(input => {
+                    input.addEventListener("change", function () {
+                        const index = this.dataset.index;
+                        const newQty = parseInt(this.value);
+                        if (newQty >= 1) {
+                            orderItems[index].quantity = newQty;
+                            updateOrderTable();
+                        }
+                    });
+                });
+            }           
+
+            function clearDataAfterAddProduct(){
+
+                 document.getElementById("selectedProductId").value = '';
+                 document.getElementById("productSearch").value = '';
+                 document.getElementById("selectedProductPrice").value = '';
+            }
+
+            window.removeItem = function(index) {
+                orderItems.splice(index, 1);
+                updateOrderTable();
+            };
+
+        });
 
 
     </script>
