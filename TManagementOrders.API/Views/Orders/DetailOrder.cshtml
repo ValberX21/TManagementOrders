@@ -1,0 +1,78 @@
+﻿@using TManagementOrders.Domain.Entities
+@using TManagementOrders.Domain.Enums
+@model Order
+
+@{
+    ViewData["Title"] = "Visualizar Pedido";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Detalhes do Pedido</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">ID do Pedido</dt>
+                <dd class="col-sm-9">@Model.Id</dd>
+
+                <dt class="col-sm-3">ID do Cliente</dt>
+                <dd class="col-sm-9">@Model.IdClient</dd>
+
+                <dt class="col-sm-3">Data do Pedido</dt>
+                <dd class="col-sm-9">@Model.DateOrder.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">@Model.Status</dd>
+
+                <dt class="col-sm-3">Total</dt>
+                <dd class="col-sm-9">R$ @Model.Total.ToString("N2")</dd>
+            </dl>
+
+            <hr />
+
+            <h5 class="mb-3">Itens do Pedido</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID Produto</th>
+                        <th>Quantidade</th>
+                        <th>Preço Unitário</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        <tr>
+                            <td>@item.IdProduct</td>
+                            <td>@item.Quantity</td>
+                            <td>R$ @item.UnitPrice.ToString("N2")</td>
+                            <td>R$ @(item.UnitPrice* item.Quantity).ToString("N2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <form asp-action="UpdateOrderStatus" asp-controller="Orders" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+
+                <div class="form-group mt-4">
+                    <label for="status">Atualizar Status</label>
+                    <select class="form-control" id="status" name="newStatus">
+                        @foreach (var status in Enum.GetValues(typeof(StatusOrder)))
+                        {
+                            <option value="@status" selected="@(status.Equals(Model.Status) ? "selected" : null)">
+                                @status
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success mt-3">
+                    <i class="bi bi-check-circle"></i> Atualizar Status
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

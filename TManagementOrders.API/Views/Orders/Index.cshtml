@@ -1,5 +1,4 @@
-﻿@using TManagementOrders.Domain.Entities
-@model OrderFilterViewModel
+﻿@model TManagementOrders.Domain.Entities.OrderFilterViewModel
 
 @{
     ViewData["Title"] = "Lista de Pedidos";
@@ -16,3 +15,64 @@
     </div>
 </div>
 
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="row">
+        <div class="col-md-5">
+            <input type="text"
+                   name="ClientFilter"
+                   value="@Model.SelectedClientName"
+                   class="form-control"
+                   placeholder="Filtrar por nome do cliente..." />
+        </div>
+        <div class="col-md-5">
+           <select name="StatusFilter" class="form-select">
+                <option value="">Todos os status</option>
+                <option value="NEW">Novo</option>
+                <option value="PROCESSING">Processando</option>
+                <option value="FINISHED">Finalizado</option>
+
+            </select>
+        </div>
+        <div class="col-md-2 text-end">
+            <button type="submit" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-search"></i> Filtrar
+            </button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Nome do Cliente</th>
+            <th>Data do Pedido</th>
+            <th>Status</th>
+            <th>Total do Pedido</th>
+            <th>Visualizar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.OrderItems)
+        {
+            <tr>
+                <td>@order.ClientName</td>
+                <td>@order.DateOrder.ToString("dd/MM/yyyy")</td>
+                <td>@order.Status</td>
+                <td>R$ @order.Total.ToString("N2")</td>
+                <td class="text-center">
+                    <a asp-action="GotoDetailOrderPage"
+                       asp-controller="Orders"
+                       asp-route-id="@order.Id"
+                       class="btn btn-sm btn-outline-info"
+                       title="Visualizar Pedido">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+</<div>
+
+</div>

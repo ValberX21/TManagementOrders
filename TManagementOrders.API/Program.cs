@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IBaseInterface<Client>, BaseRepository<Client>>();
 builder.Services.AddScoped<IBaseInterface<Product>, BaseRepository<Product>>();
-builder.Services.AddScoped<IBaseInterface<Orders>, BaseRepository<Orders>>();
+builder.Services.AddScoped<IBaseInterface<Order>, BaseRepository<Order>>();
 
 
 builder.Services.AddScoped<ClientRepository>();

@@ -19,5 +19,25 @@ namespace TManagementOrders.Infrastructure.Repositories
             using var connection = _context.CreateConnection();
             return await connection.QueryFirstOrDefaultAsync<Product>(sql, new { Name = $"%{name}%" });
         }
+
+        public async Task DecreaseStockAsync(int productId, int quantity)
+        {
+            var sql = @"
+                        UPDATE Product
+                        SET Quantity = Quantity - @Quantity
+                        WHERE Id = @ProductId AND Quantity >= @Quantity";
+
+            using var connection = _context.CreateConnection();
+            var rowsAffected = await connection.ExecuteAsync(sql, new
+            {
+                ProductId = productId,
+                Quantity = quantity
+            });
+
+            if (rowsAffected == 0)
+                throw new Exception($"Not enough quantity in stock for Product ID {productId}");
+        }
+
+       
     }
 }

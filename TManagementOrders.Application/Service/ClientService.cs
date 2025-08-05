@@ -7,7 +7,7 @@ namespace TManagementOrders.Application.Service
     public class ClientService 
     {
         private readonly IBaseInterface<Client> _baseRepository;
-        private readonly ClientRepository _clientRepository;
+        private readonly ClientRepository _clientRepository;       
 
         public ClientService(IBaseInterface<Client> baseRepository, ClientRepository clientRepository)
         {           

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36301.6 d17.14
+VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TManagementOrders.API", "TManagementOrders.API\TManagementOrders.API.csproj", "{5B139568-37A4-4B45-894D-D1B12F2C8CB1}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TManagementOrders.Infrastructure", "TManagementOrders.Infrastructure\TManagementOrders.Infrastructure.csproj", "{4F49758A-838D-4F24-A276-E227A5545B70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TManagementOrders.Tests", "TManagementOrders.Tests\TManagementOrders.Tests.csproj", "{C6A638A4-8B88-4F97-833A-B22D49C89B97}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "TManagementOrders.SQL", "TManagementOrders.SQL\TManagementOrders.SQL.sqlproj", "{236CD69F-7B01-4840-84E5-FA4FCF032A9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,12 @@ Global
 		{C6A638A4-8B88-4F97-833A-B22D49C89B97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A638A4-8B88-4F97-833A-B22D49C89B97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6A638A4-8B88-4F97-833A-B22D49C89B97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236CD69F-7B01-4840-84E5-FA4FCF032A9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236CD69F-7B01-4840-84E5-FA4FCF032A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236CD69F-7B01-4840-84E5-FA4FCF032A9E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{236CD69F-7B01-4840-84E5-FA4FCF032A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236CD69F-7B01-4840-84E5-FA4FCF032A9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236CD69F-7B01-4840-84E5-FA4FCF032A9E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

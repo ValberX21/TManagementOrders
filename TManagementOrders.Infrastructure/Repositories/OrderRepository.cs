@@ -21,7 +21,7 @@ namespace TManagementOrders.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Orders> CreateOrder(Orders order)
+        public async Task<Order> CreateOrder(Order order)
         {
             using var connection = _context.CreateConnection();
             connection.Open();
@@ -30,14 +30,14 @@ namespace TManagementOrders.Infrastructure.Repositories
             try
             {
                 var sqlInsertOrder = @"
-                INSERT INTO [Order] (IdClient, DataPedido, Total, Status)
-                VALUES (@IdClient, @DataPedido, @Total, @Status);
+                INSERT INTO [Order] (IdClient, DateOrder, Total, Status)
+                VALUES (@IdClient, @DateOrder, @Total, @Status);
                 SELECT CAST(SCOPE_IDENTITY() as int);";                
 
                 int generatedId = await connection.ExecuteScalarAsync<int>(sqlInsertOrder, new
                 {
                     order.IdClient,
-                    order.DataPedido,
+                    order.DateOrder,
                     order.Total,
                     order.Status 
                     }, transaction: transaction
@@ -64,6 +64,7 @@ namespace TManagementOrders.Infrastructure.Repositories
                          transaction: transaction
                     );
                 }
+                order.Id = generatedId;
                 transaction.Commit();
                 return order;
 
@@ -74,5 +75,13 @@ namespace TManagementOrders.Infrastructure.Repositories
                 throw new Exception("An error occurred while creating the order.", ex);
             }                  
         }
+
+        public async Task<Order?> GetById(int id)
+        {
+            var sql = "SELECT * FROM [Order] WHERE Id = @Id";
+            using var connection = _context.CreateConnection();
+            return await connection.QueryFirstOrDefaultAsync<Order>(sql, new { Id = id });
+        }
+
     }
 }

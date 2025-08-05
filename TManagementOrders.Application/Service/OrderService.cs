@@ -12,15 +12,42 @@ namespace TManagementOrders.Application.Service
     public class OrderService
     {
         private readonly OrderRepository _orderRepository;
+        private readonly ProductRepository _productRepository;
+        private readonly IBaseInterface<Product> _baseRepository;
 
-        public OrderService(OrderRepository orderRepository)
+        public OrderService(OrderRepository orderRepository, IBaseInterface<Product> baseInterface, ProductRepository productRepository)
         {
                 _orderRepository = orderRepository;
+                _baseRepository = baseInterface;
+                _productRepository = productRepository;
         }
         
-        public async Task<Orders> AddAsync(Orders order)
+        public async Task<Order> AddAsync(Order order)
         {
-            return await _orderRepository.CreateOrder(order);
+            foreach (var item in order.OrderItems)
+            {
+                var product = await _baseRepository.GetByIdAsync(item.IdProduct);
+
+                if (product == null)
+                    throw new Exception($"Produto {item.Id} não encontrado.");
+
+                if (product.Quantity < item.Quantity)
+                    throw new Exception($"Infelizmente não temos a quantidade requisitada do produto {product.Name}. \n Quantidade disponivel: {product.Quantity}");
+            }
+
+            var createdOrder = await _orderRepository.CreateOrder(order);
+
+            foreach (var item in createdOrder.OrderItems)
+            {
+                await _productRepository.DecreaseStockAsync(item.IdProduct, item.Quantity);
+            }
+
+            return createdOrder;
+        }
+    
+        public async Task<Order> GetById(int id)
+        {
+           return await _orderRepository.GetById(id);   
         }
     }
 }
