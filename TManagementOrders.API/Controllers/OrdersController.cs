@@ -11,26 +11,23 @@ namespace TManagementOrders.API.Controllers
     public class OrdersController : Controller
     {
         private readonly OrderService _ordersService;
-        private readonly IBaseInterface<Order> _baseRepository;
         private readonly ClientService _clientService;
         private readonly ProductService _productService;
 
         Translate translate = new Translate();
 
         public OrdersController(OrderService ordersService,
-                                IBaseInterface<Order> baseInterface,
                                 ClientService clientService,
                                 ProductService productService)
         {
             _ordersService = ordersService;
-            _baseRepository = baseInterface;
             _clientService = clientService;
             _productService = productService;
         }
 
         public async Task<IActionResult> Index(string? ClientFilter, string? StatusFilter)
         {
-            IEnumerable<Order> orders = await _baseRepository.GetAllAsync();
+            IEnumerable<Order> orders = await _ordersService.GetAllAsync();
             IEnumerable<Client> clients = await _clientService.GetAllAsync();
 
             var orderViews = orders.Select(order =>

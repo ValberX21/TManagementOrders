@@ -130,5 +130,11 @@ namespace TManagementOrders.Infrastructure.Repositories
             return affectedRows > 0;
         }
 
+        public async Task<IEnumerable<Order>> GetAllAsync()
+        {
+            var sql = $"SELECT * FROM [Order]";
+            using var connection = _context.CreateConnection();
+            return await connection.QueryAsync<Order>(sql);
+        }
     }
 }

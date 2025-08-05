@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TManagementOrders.Domain.Entities;
+﻿using TManagementOrders.Domain.Entities;
 using TManagementOrders.Domain.Enums;
 using TManagementOrders.Domain.Interfaces;
 using TManagementOrders.Infrastructure.Repositories;
@@ -54,6 +49,11 @@ namespace TManagementOrders.Application.Service
         public async Task<bool> UpdateStatusAsync(int orderId, StatusOrder newStatus)
         {
             return await _orderRepository.UpdateStatusAsync(orderId, newStatus);   
+        }
+
+        public async Task<IEnumerable<Order>> GetAllAsync()
+        {
+            return await _orderRepository.GetAllAsync();
         }
     }
 }

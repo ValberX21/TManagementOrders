@@ -10,7 +10,6 @@ namespace TManagementOrders.API.Controllers
 
         public ClientController(ClientService clientService)
         {
-
             _clientService = clientService;
         }
 
