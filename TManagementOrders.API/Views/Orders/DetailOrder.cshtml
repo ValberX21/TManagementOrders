@@ -1,9 +1,20 @@
-﻿@using TManagementOrders.Domain.Entities
-@using TManagementOrders.Domain.Enums
-@model Order
+﻿@using TManagementOrders.Domain.Enums
 
 @{
-    ViewData["Title"] = "Visualizar Pedido";
+    ViewData["Title"] = "Detalhes do Pedido";
+}
+
+@functions {
+    public static string TranslateStatus(StatusOrder status)
+    {
+        return status switch
+        {
+            StatusOrder.NEW => "Novo",
+            StatusOrder.PROCESSING => "Em processamento",
+            StatusOrder.FINISHED => "Finalizado",
+            _ => "Desconhecido"
+        };
+    }
 }
 
 <div class="container mt-5">
@@ -16,63 +27,59 @@
                 <dt class="col-sm-3">ID do Pedido</dt>
                 <dd class="col-sm-9">@Model.Id</dd>
 
-                <dt class="col-sm-3">ID do Cliente</dt>
-                <dd class="col-sm-9">@Model.IdClient</dd>
+                <dt class="col-sm-3">Cliente</dt>
+                <dd class="col-sm-9">@Model.ClientName</dd>
 
                 <dt class="col-sm-3">Data do Pedido</dt>
                 <dd class="col-sm-9">@Model.DateOrder.ToString("dd/MM/yyyy HH:mm")</dd>
 
                 <dt class="col-sm-3">Status</dt>
-                <dd class="col-sm-9">@Model.Status</dd>
+                <dd class="col-sm-9">@TranslateStatus(Model.Status)</dd>
 
                 <dt class="col-sm-3">Total</dt>
                 <dd class="col-sm-9">R$ @Model.Total.ToString("N2")</dd>
             </dl>
 
-            <hr />
+            <form asp-action="UpdateStatus" method="post" class="mt-4">
+                <input type="hidden" name="OrderId" value="@Model.Id" />
+                <div class="form-group">
+                    <label for="newStatus">Atualizar Status</label>
+                    <select class="form-control" id="newStatus" name="NewStatus">
+                        @foreach (StatusOrder status in Enum.GetValues(typeof(StatusOrder)))
+                        {
+                            <option value="@status" selected="@(Model.Status == status)">
+                                @TranslateStatus(status)
+                            </option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success mt-2">Atualizar Status</button>
+            </form>
 
-            <h5 class="mb-3">Itens do Pedido</h5>
+            <h5 class="mt-5">Itens do Pedido</h5>
             <table class="table table-bordered">
-                <thead>
+                <thead class="table-light">
                     <tr>
-                        <th>ID Produto</th>
+                        <th>ID do Item</th>
+                        <th>Nome do Produto</th>
                         <th>Quantidade</th>
                         <th>Preço Unitário</th>
-                        <th>Total</th>
+                        <th>Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.OrderItems)
                     {
                         <tr>
-                            <td>@item.IdProduct</td>
+                            <td>@item.Id</td>
+                            <td>@item.ProductName</td>
                             <td>@item.Quantity</td>
                             <td>R$ @item.UnitPrice.ToString("N2")</td>
-                            <td>R$ @(item.UnitPrice* item.Quantity).ToString("N2")</td>
+                            <td>R$ @item.Subtotal.ToString("N2")</td>
                         </tr>
                     }
                 </tbody>
             </table>
-
-            <form asp-action="UpdateOrderStatus" asp-controller="Orders" method="post">
-                <input type="hidden" name="id" value="@Model.Id" />
-
-                <div class="form-group mt-4">
-                    <label for="status">Atualizar Status</label>
-                    <select class="form-control" id="status" name="newStatus">
-                        @foreach (var status in Enum.GetValues(typeof(StatusOrder)))
-                        {
-                            <option value="@status" selected="@(status.Equals(Model.Status) ? "selected" : null)">
-                                @status
-                            </option>
-                        }
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-success mt-3">
-                    <i class="bi bi-check-circle"></i> Atualizar Status
-                </button>
-            </form>
         </div>
     </div>
 </div>

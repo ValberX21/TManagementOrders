@@ -11,7 +11,7 @@ namespace TManagementOrders.Domain.Entities
     {
         
         public string? SelectedClientName { get; set; }
-        public StatusOrder? StatusFilter { get; set; } 
+        public string? SelectedStatus { get; set; } 
         public IEnumerable<OrderViewModel> OrderItems { get; set; }
     }
 }

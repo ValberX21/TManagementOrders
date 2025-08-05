@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using TManagementOrders.Domain.Entities;
+using TManagementOrders.Domain.Enums;
+using TManagementOrders.Domain.Interfaces;
 using TManagementOrders.Infrastructure.Data;
 using static Dapper.SqlMapper;
 
@@ -78,9 +80,54 @@ namespace TManagementOrders.Infrastructure.Repositories
 
         public async Task<Order?> GetById(int id)
         {
-            var sql = "SELECT * FROM [Order] WHERE Id = @Id";
+
+            var sql = @"
+                        SELECT 
+                            ORD.Id, ORD.IdClient, ORD.DateOrder, ORD.Total, ORD.Status,
+                            ORDI.Id, ORDI.IdOrder, ORDI.IdProduct, ORDI.Quantity, ORDI.UnitPrice
+                        FROM [Order] ORD
+                        LEFT JOIN [OrderItem] ORDI ON ORD.Id = ORDI.IdOrder
+                        WHERE ORD.Id = @Id";
+
             using var connection = _context.CreateConnection();
-            return await connection.QueryFirstOrDefaultAsync<Order>(sql, new { Id = id });
+            var orderDictionary = new Dictionary<int, Order>();
+
+            var result = await connection.QueryAsync<Order, OrderItem, Order>
+            (
+                sql,
+                (order, orderItem) =>
+                {
+                    if (!orderDictionary.TryGetValue(order.Id, out var currentOrder))
+                    {
+                        currentOrder = order;
+                        currentOrder.OrderItems = new List<OrderItem>();
+                        orderDictionary.Add(currentOrder.Id, currentOrder);
+                    }
+
+                    if (orderItem != null)
+                        currentOrder.OrderItems.Add(orderItem);
+
+                    return currentOrder;
+                },
+                new { Id = id },
+                splitOn: "Id"
+            );
+
+            return result.FirstOrDefault();
+        }
+
+        public async Task<bool> UpdateStatusAsync(int orderId, StatusOrder newStatus)
+        {
+            const string sql = @"UPDATE [Order] SET Status = @Status WHERE Id = @Id";
+
+            using var connection = _context.CreateConnection();
+            var affectedRows = await connection.ExecuteAsync(sql, new
+            {
+                Id = orderId,
+                Status = newStatus
+            });
+
+            return affectedRows > 0;
         }
 
     }

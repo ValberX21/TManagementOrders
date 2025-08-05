@@ -1,8 +1,23 @@
-﻿@model TManagementOrders.Domain.Entities.OrderFilterViewModel
+﻿@using TManagementOrders.Domain.Enums
+@model TManagementOrders.Domain.Entities.OrderFilterViewModel
 
 @{
     ViewData["Title"] = "Lista de Pedidos";
 }
+
+@functions {
+    public static string TranslateStatus(StatusOrder status)
+    {
+        return status switch
+        {
+            StatusOrder.NEW => "Novo",
+            StatusOrder.PROCESSING => "Processando",
+            StatusOrder.FINISHED => "Finalizado",
+            _ => "Desconhecido"
+        };
+    }
+}
+
 
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -25,13 +40,17 @@
                    placeholder="Filtrar por nome do cliente..." />
         </div>
         <div class="col-md-5">
-           <select name="StatusFilter" class="form-select">
+            <select name="StatusFilter" class="form-select">
                 <option value="">Todos os status</option>
-                <option value="NEW">Novo</option>
-                <option value="PROCESSING">Processando</option>
-                <option value="FINISHED">Finalizado</option>
-
+                @foreach (StatusOrder status in Enum.GetValues(typeof(StatusOrder)))
+                {
+                    var isSelected = status.ToString() == Model.SelectedStatus ? "selected" : "";
+                    <option value="@status" selected="@(status.ToString() == Model.SelectedStatus ? "selected" : null)">
+                        @TranslateStatus(status)
+                    </option>
+                }
             </select>
+
         </div>
         <div class="col-md-2 text-end">
             <button type="submit" class="btn btn-outline-secondary w-100">
