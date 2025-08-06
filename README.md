@@ -69,8 +69,12 @@ TManagementOrders
   ```
 
 3. Execute o script no seu SQL Server para criar as tabelas e dados iniciais.
+   OU
+   Conecte no seu banco de dados local pelo projeto TManagementOrders.SQL
+   e execute o mesmo.
+   
 
-3. Atualize a `ConnectionString` no arquivo `appsettings.json`:
+4. Atualize a `ConnectionString` no arquivo `appsettings.json`:
 ```json
  "ConnectionStrings": {
    "DefaultConnection": "Server=XXXX;Database=TManagementOrdersDB;Trusted_Connection=True;TrustServerCertificate=True"
