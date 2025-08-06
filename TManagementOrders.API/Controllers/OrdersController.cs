@@ -38,7 +38,8 @@ namespace TManagementOrders.API.Controllers
                     ClientName = client?.Name ?? "Desconhecido",
                     DateOrder = order.DateOrder,
                     Total = order.Total,
-                    Status = translate.TranslateStatus(order.Status)  //order.Status.ToString()
+                    StatusRaw = order.Status,  
+                    Status = translate.TranslateStatus(order.Status)
                 };
             }).ToList();
 
@@ -47,10 +48,13 @@ namespace TManagementOrders.API.Controllers
                     .Where(o => o.ClientName.Contains(ClientFilter, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
-            if (!string.IsNullOrEmpty(StatusFilter))
-                orderViews = orderViews
-                    .Where(o => o.Status.Equals(StatusFilter, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+            if (!string.IsNullOrEmpty(StatusFilter) &&
+                Enum.TryParse<StatusOrder>(StatusFilter, out var selectedStatus))
+                        {
+                            orderViews = orderViews
+                                .Where(o => o.StatusRaw == selectedStatus)
+                                .ToList();
+            }
 
             var model = new OrderFilterViewModel
             {

@@ -4,7 +4,7 @@ namespace TManagementOrders.API.Helper
 {
     public class Translate
     {
-        public string TranslateStatus(StatusOrder status)
+        public string TranslateStatus(StatusOrder? status)
         {
             return status switch
             {

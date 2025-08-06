@@ -10,6 +10,7 @@ namespace TManagementOrders.Domain.Entities
         public DateTime DateOrder { get; set; }
         public decimal Total { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-        public string Status { get; set; } 
+        public string Status { get; set; }
+        public StatusOrder StatusRaw { get; set; } // Enum real para lógica interna
     }
 }
