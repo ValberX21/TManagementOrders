@@ -33,7 +33,7 @@ Este projeto é um sistema simplificado de **Gestão de Pedidos** desenvolvido p
 
 ### 4. Interface
 - Interface responsiva com Bootstrap
-- Filtros dinâmicos e interações via jQuery (ex: adicionar itens ao pedido sem recarregar a página)
+- Filtros dinâmicos e interações (ex: adicionar itens ao pedido sem recarregar a página)
 
 ## 🧱 Estrutura do Projeto
 
@@ -69,11 +69,15 @@ TManagementOrders
   ```
 
 3. Execute o script no seu SQL Server para criar as tabelas e dados iniciais.
+   OU
+   Conecte no seu banco de dados local pelo projeto TManagementOrders.SQL
+   e execute o mesmo.
+   
 
-3. Atualize a `ConnectionString` no arquivo `appsettings.json`:
+4. Atualize a `ConnectionString` no arquivo `appsettings.json`:
 ```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Database=TManagementOrdersDb;User Id=sa;Password=your_password;"
-}
+ "ConnectionStrings": {
+   "DefaultConnection": "Server=XXXX;Database=TManagementOrdersDB;Trusted_Connection=True;TrustServerCertificate=True"
+ }
 
 
