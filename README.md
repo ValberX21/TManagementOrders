@@ -51,7 +51,7 @@ TManagementOrders
 
 ## 💡 Boas Práticas Aplicadas
 
-- Interface base para não repetir codigo C.R.U.D
+- Interface base para evitar repetição de código nos CRUDs
 - Injeção de Dependência com o container nativo do ASP.NET Core
 - Padrão Repository aplicado com Dapper.NET
 - Organização em camadas (Presentation, Domain, Application, Infrastructure)
@@ -63,12 +63,17 @@ TManagementOrders
    ```bash
    git clone https://github.com/seuusuario/TManagementOrders.git
    ```
-2. Va até o projeto 
+2. Vá até o diretório:
   ```
   TManagementOrders.SQL -> Start_Script ->  SCRIPT_CREATE_DB_TABLES.sql
-
-  Pegue o script e execute em seu banco SQL Server
-
-  Para criar o banco e tabelas base
   ```
+
+3. Execute o script no seu SQL Server para criar as tabelas e dados iniciais.
+
+3. Atualize a `ConnectionString` no arquivo `appsettings.json`:
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=TManagementOrdersDb;User Id=sa;Password=your_password;"
+}
+
 
