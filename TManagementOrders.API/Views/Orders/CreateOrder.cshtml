@@ -237,10 +237,11 @@
 
                     if (response.ok) {
                         alert("Pedido criado com sucesso!");
-                        window.location.href = "/Orders"; // redirect to order list, for example
+                        window.location.href = "/Orders";
                     } else {
-                        const errorText = await response.text();
-                        alert("Erro ao criar pedido: " + errorText);
+                        const errorData = await response.json();
+                        alert("Erro ao criar pedido: " + (errorData.error || "Erro desconhecido."));
+                        window.location.href = "/Orders/GotoCreateOrderPage";
                     }
                 } catch (error) {
                     console.error("Erro ao enviar pedido:", error);

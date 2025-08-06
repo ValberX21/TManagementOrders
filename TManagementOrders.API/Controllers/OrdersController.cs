@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using TManagementOrders.API.Helper;
 using TManagementOrders.Application.Service;
 using TManagementOrders.Domain.Entities;
 using TManagementOrders.Domain.Enums;
-using TManagementOrders.Domain.Interfaces;
 
 namespace TManagementOrders.API.Controllers
 {
@@ -14,7 +12,7 @@ namespace TManagementOrders.API.Controllers
         private readonly ClientService _clientService;
         private readonly ProductService _productService;
 
-        Translate translate = new Translate();
+        Translate translate =  new Translate(); 
 
         public OrdersController(OrderService ordersService,
                                 ClientService clientService,
@@ -40,7 +38,7 @@ namespace TManagementOrders.API.Controllers
                     ClientName = client?.Name ?? "Desconhecido",
                     DateOrder = order.DateOrder,
                     Total = order.Total,
-                    Status = order.Status.ToString()
+                    Status = translate.TranslateStatus(order.Status)  //order.Status.ToString()
                 };
             }).ToList();
 
@@ -77,12 +75,12 @@ namespace TManagementOrders.API.Controllers
             try
             {
                 await _ordersService.AddAsync(neworder);
-                return RedirectToAction("Index"); 
+                return Ok(new { message = "Pedido criado com sucesso!" });
+
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View("Index"); 
+                return BadRequest(new { error = ex.Message });
             }
         }
 
