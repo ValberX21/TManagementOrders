@@ -1,28 +1,31 @@
 ﻿using TManagementOrders.Domain.Entities;
 using TManagementOrders.Domain.Enums;
 using TManagementOrders.Domain.Interfaces;
+using TManagementOrders.Domain.Interfaces.Repository;
 using TManagementOrders.Infrastructure.Repositories;
 
 namespace TManagementOrders.Application.Service
 {
-    public class OrderService
+    public class OrderService 
     {
         private readonly OrderRepository _orderRepository;
+        private readonly IBaseInterfaceRepository<Product> _productInterface;
         private readonly ProductRepository _productRepository;
-        private readonly IBaseInterface<Product> _baseRepository;
 
-        public OrderService(OrderRepository orderRepository, IBaseInterface<Product> baseInterface, ProductRepository productRepository)
+        public OrderService(OrderRepository orderRepository,
+                            IBaseInterfaceRepository<Product> productInterface,
+                            ProductRepository productRepository)
         {
-                _orderRepository = orderRepository;
-                _baseRepository = baseInterface;
-                _productRepository = productRepository;
-        }
-        
+            _productInterface = productInterface;
+            _orderRepository = orderRepository;
+            _productRepository = productRepository;
+        }        
+          
         public async Task<Order> AddAsync(Order order)
         {
             foreach (var item in order.OrderItems)
             {
-                var product = await _baseRepository.GetByIdAsync(item.IdProduct);
+                var product = await _productInterface.GetByIdAsync(item.IdProduct);
 
                 if (product == null)
                     throw new Exception($"Produto {item.Id} não encontrado.");
@@ -40,20 +43,20 @@ namespace TManagementOrders.Application.Service
 
             return createdOrder;
         }
-    
-        public async Task<Order> GetById(int id)
-        {
-           return await _orderRepository.GetById(id);   
-        }
-
-        public async Task<bool> UpdateStatusAsync(int orderId, StatusOrder newStatus)
-        {
-            return await _orderRepository.UpdateStatusAsync(orderId, newStatus);   
-        }
 
         public async Task<IEnumerable<Order>> GetAllAsync()
         {
             return await _orderRepository.GetAllAsync();
+        }
+
+        public async Task<Order> GetById(int id)
+        {
+            return await _orderRepository.GetById(id);
+        }
+
+        public async Task<bool> UpdateStatusAsync(int orderId, StatusOrder newStatus)
+        {
+            return await _orderRepository.UpdateStatusAsync(orderId, newStatus);
         }
     }
 }

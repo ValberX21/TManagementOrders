@@ -1,47 +1,49 @@
 ﻿using TManagementOrders.Domain.Entities;
 using TManagementOrders.Domain.Interfaces;
+using TManagementOrders.Domain.Interfaces.Repository;
 using TManagementOrders.Infrastructure.Repositories;
 
 namespace TManagementOrders.Application.Service
 {
-    public class ClientService 
-    {
-        private readonly IBaseInterface<Client> _baseRepository;
+    public class ClientService : IBaseInterfaceService<Client>
+    {        
+        private readonly IBaseInterfaceRepository<Client> _baseInterfaceRepository;
         private readonly ClientRepository _clientRepository;       
 
-        public ClientService(IBaseInterface<Client> baseRepository, ClientRepository clientRepository)
-        {           
-            _baseRepository = baseRepository;
+        public ClientService(ClientRepository clientRepository,
+                             IBaseInterfaceRepository<Client> baseInterfaceSRepository)
+        {
             _clientRepository = clientRepository;
+            _baseInterfaceRepository = baseInterfaceSRepository;   
         }
 
-        public async Task<int> AddAsync(Client client)
+        public async Task<int> AddAsync(Client property)
         {
-            return await _baseRepository.AddAsync(client);
+            return await _baseInterfaceRepository.AddAsync(property);  
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            return _baseRepository.DeleteAsync(id);
+            await _baseInterfaceRepository.DeleteAsync(id); 
         }
 
-        public Task<IEnumerable<Client>> GetAllAsync()
+        public async Task<IEnumerable<Client>> GetAllAsync()
         {
-            return _baseRepository.GetAllAsync();
+            return await _baseInterfaceRepository.GetAllAsync();   
         }
 
         public async Task<Client?> GetByIdAsync(int id)
         {
-            return await _baseRepository.GetByIdAsync(id);
+            return await _baseInterfaceRepository.GetByIdAsync(id);
         }
 
-        public async Task<int> UpdateAsync(Client entity)
+        public async Task<int> UpdateAsync(Client client)
         {
-            int rowUpdate = await _baseRepository.UpdateAsync(entity);
+            int rowUpdate = await _baseInterfaceRepository.UpdateAsync(client);
             return rowUpdate;
         }
 
-        public async Task<Client?> GetByNameAsync(string name)
+        public async Task<Client> GetByNameAsync(string name)
         {
             return await _clientRepository.GetByNameAsync(name);
         }

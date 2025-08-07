@@ -1,22 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TManagementOrders.Application.Service;
 using TManagementOrders.Domain.Entities;
+using TManagementOrders.Domain.Interfaces;
 
 namespace TManagementOrders.API.Controllers
 {
     public class ClientController : Controller
     {
+        private readonly IBaseInterfaceService<Client> _baseService;
         private readonly ClientService _clientService;
 
-        public ClientController(ClientService clientService)
+        public ClientController(IBaseInterfaceService<Client> baseService,
+                                ClientService clientService)
         {
+            _baseService = baseService;
             _clientService = clientService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
-            var clients = await _clientService.GetAllAsync();
+            var clients = await _baseService.GetAllAsync();
 
             var filteredClients = string.IsNullOrWhiteSpace(filter)
                 ? clients.ToList()
@@ -47,7 +51,7 @@ namespace TManagementOrders.API.Controllers
             if (!ModelState.IsValid)
                 return View(client);
 
-            await _clientService.AddAsync(client);
+            await _baseService.AddAsync(client);
             return RedirectToAction("Index");
         }
 
@@ -57,14 +61,14 @@ namespace TManagementOrders.API.Controllers
             if (id != client.Id)
                 return BadRequest();
 
-            await _clientService.UpdateAsync(client);
+            await _baseService.UpdateAsync(client);
             return Ok();
         }
 
         [HttpGet]
         public async Task<IActionResult> GotoEditClintPage(int id)
         {
-            var client = await _clientService.GetByIdAsync(id);
+            var client = await _baseService.GetByIdAsync(id);
             if (client == null)
                 return NotFound();
 
@@ -74,7 +78,7 @@ namespace TManagementOrders.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteClient(int id)
         {
-            await _clientService.DeleteAsync(id);
+            await _baseService.DeleteAsync(id);
             return Ok();
         }
 

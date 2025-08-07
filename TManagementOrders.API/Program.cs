@@ -1,6 +1,7 @@
 using TManagementOrders.Application.Service;
 using TManagementOrders.Domain.Entities;
 using TManagementOrders.Domain.Interfaces;
+using TManagementOrders.Domain.Interfaces.Repository;
 using TManagementOrders.Infrastructure.Data;
 using TManagementOrders.Infrastructure.Repositories;
 
@@ -10,20 +11,20 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IBaseInterface<Client>, BaseRepository<Client>>();
-builder.Services.AddScoped<IBaseInterface<Product>, BaseRepository<Product>>();
-builder.Services.AddScoped<IBaseInterface<Order>, BaseRepository<Order>>();
+builder.Services.AddScoped<DapperContext>();
 
+builder.Services.AddScoped(typeof(IBaseInterfaceRepository<>), typeof(BaseRepository<>));
 
-builder.Services.AddScoped<ClientRepository>();
 builder.Services.AddScoped<ProductRepository>();
-builder.Services.AddScoped<OrderService>();
-
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<ClientService>();
+builder.Services.AddScoped<ClientRepository>(); 
 builder.Services.AddScoped<OrderRepository>();
 
-builder.Services.AddScoped<DapperContext>();
+builder.Services.AddScoped<IBaseInterfaceService<Client>, ClientService>();
+builder.Services.AddScoped<IBaseInterfaceService<Product>, ProductService>();
+builder.Services.AddScoped<ClientService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<ProductService>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

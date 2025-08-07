@@ -1,11 +1,12 @@
 ﻿using Dapper;
 using TManagementOrders.Domain.Interfaces;
+using TManagementOrders.Domain.Interfaces.Repository;
 using TManagementOrders.Infrastructure.Data;
 using static Dapper.SqlMapper;
 
 namespace TManagementOrders.Infrastructure.Repositories
 {
-    public class BaseRepository<T> : IBaseInterface<T> where T : class
+    public class BaseRepository<T> : IBaseInterfaceRepository<T> where T : class
     {
         protected readonly DapperContext _context;
 

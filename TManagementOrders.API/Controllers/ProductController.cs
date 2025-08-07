@@ -1,23 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TManagementOrders.Application.Service;
 using TManagementOrders.Domain.Entities;
+using TManagementOrders.Domain.Interfaces;
 
 namespace TManagementOrders.API.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly IBaseInterfaceService<Product> _baseService;
         private readonly ProductService _productService;
 
-        public ProductController(ProductService productService)
-        {
+        //private readonly ProductService _baseService;
 
+        public ProductController(IBaseInterfaceService<Product> baseService,
+                                 ProductService productService )
+        {
+            _baseService = baseService;
             _productService = productService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
-            var clients = await _productService.GetAllAsync();
+            var clients = await _baseService.GetAllAsync();
 
             var filteredClients = string.IsNullOrWhiteSpace(filter)
                 ? clients.ToList()
@@ -39,7 +44,7 @@ namespace TManagementOrders.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            await _productService.DeleteAsync(id);
+            await _baseService.DeleteAsync(id);
             return Ok();
         }
 
@@ -48,7 +53,7 @@ namespace TManagementOrders.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _productService.AddAsync(product);
+                await _baseService.AddAsync(product);
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -66,14 +71,14 @@ namespace TManagementOrders.API.Controllers
             if (id != product.Id)
                 return BadRequest();
 
-            await _productService.UpdateAsync(product);
+            await _baseService.UpdateAsync(product);
             return Ok();
         }
 
         [HttpGet]
         public async Task<IActionResult> GotoEditProductPage(int id)
         {
-            var product = await _productService.GetByIdAsync(id);
+            var product = await _baseService.GetByIdAsync(id);
             if (product == null)
                 return NotFound();
 

@@ -1,6 +1,6 @@
-﻿namespace TManagementOrders.Domain.Interfaces
+﻿namespace TManagementOrders.Domain.Interfaces.Repository
 {
-    public interface IBaseInterface<T> where T : class
+    public interface IBaseInterfaceRepository<T> where T : class
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetByIdAsync(int id);
