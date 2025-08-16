@@ -10,8 +10,6 @@ namespace TManagementOrders.API.Controllers
         private readonly IBaseInterfaceService<Product> _baseService;
         private readonly ProductService _productService;
 
-        //private readonly ProductService _baseService;
-
         public ProductController(IBaseInterfaceService<Product> baseService,
                                  ProductService productService )
         {

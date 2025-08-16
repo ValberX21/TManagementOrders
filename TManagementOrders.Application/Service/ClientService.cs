@@ -10,8 +10,7 @@ namespace TManagementOrders.Application.Service
         private readonly IBaseInterfaceRepository<Client> _baseInterfaceRepository;
         private readonly ClientRepository _clientRepository;       
 
-        public ClientService(ClientRepository clientRepository,
-                             IBaseInterfaceRepository<Client> baseInterfaceSRepository)
+        public ClientService(ClientRepository clientRepository, IBaseInterfaceRepository<Client> baseInterfaceSRepository)
         {
             _clientRepository = clientRepository;
             _baseInterfaceRepository = baseInterfaceSRepository;   

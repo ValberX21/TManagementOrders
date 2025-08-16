@@ -17,6 +17,11 @@ namespace TManagementOrders.API.Controllers
             _clientService = clientService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {

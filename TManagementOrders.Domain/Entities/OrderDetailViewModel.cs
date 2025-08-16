@@ -6,10 +6,10 @@ namespace TManagementOrders.Domain.Entities
     {
         public int Id { get; set; }
         public int IdClient { get; set; }
-        public string ClientName { get; set; } = "";
-        public DateTime DateOrder { get; set; }
-        public decimal Total { get; set; }
-        public StatusOrder Status { get; set; }
-        public List<OrderItemDetailViewModel> OrderItems { get; set; } = new List<OrderItemDetailViewModel>();
+        public string ClientName { get; set; } = string.Empty;
+        public DateTime DateOrder { get; set; } = DateTime.Now;
+        public decimal Total { get; set; } = 0;
+        public StatusOrder Status { get; set; } = StatusOrder.NEW;
+        public List<OrderItemDetailViewModel> OrderItems { get; set; } = [];
     }
 }
