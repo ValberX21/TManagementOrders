@@ -17,28 +17,15 @@ namespace TManagementOrders.API.Controllers
             _clientService = clientService;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
-            var clients = await _baseService.GetAllAsync();
-
-            var filteredClients = string.IsNullOrWhiteSpace(filter)
-                ? clients.ToList()
-                : clients
-                    .Where(c =>
-                        (!string.IsNullOrEmpty(c.Name) && c.Name.Contains(filter.Trim(), StringComparison.OrdinalIgnoreCase)) ||
-                        (!string.IsNullOrEmpty(c.Email) && c.Email.Contains(filter.Trim(), StringComparison.OrdinalIgnoreCase)))
-                    .ToList();
+            List<Client> clientFilter = await _clientService.FilterClient(filter);
 
             var viewModel = new ClientFilterViewModel
             {
                 Filter = filter,
-                Clients = filteredClients
+                Clients = clientFilter
             };
 
             return View(viewModel);

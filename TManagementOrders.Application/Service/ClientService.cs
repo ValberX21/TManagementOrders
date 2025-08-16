@@ -46,5 +46,10 @@ namespace TManagementOrders.Application.Service
         {
             return await _clientRepository.GetByNameAsync(name);
         }
+
+        public async Task<List<Client>> FilterClient(string? filters)
+        {
+            return await _clientRepository.FilterClientAsync(filters);
+        }
     }
 }

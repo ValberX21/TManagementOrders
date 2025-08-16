@@ -26,5 +26,18 @@ namespace TManagementOrders.Infrastructure.Repositories
             return await connection.QueryFirstOrDefaultAsync<Client>(sql, new { Name = $"%{name}%" });
         }
 
+        public async Task<List<Client>> FilterClientAsync(string? filters)
+        {
+            var sql = new StringBuilder("SELECT * FROM Client");
+            if (!string.IsNullOrWhiteSpace(filters))
+            {
+                sql.Append(" WHERE Name LIKE @Filter OR Email LIKE @Filter");
+            }
+            using var connection = _context.CreateConnection();
+            var retornoFitro =  await connection.QueryAsync<Client>(sql.ToString(), new { Filter = $"%{filters}%" });
+
+            return retornoFitro.ToList();   
+
+        }
     }
 }
