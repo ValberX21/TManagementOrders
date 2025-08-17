@@ -38,6 +38,16 @@ namespace TManagementOrders.Infrastructure.Repositories
                 throw new Exception($"Not enough quantity in stock for Product ID {productId}");
         }
 
-       
+        public async Task<IEnumerable<Product>> Filter(string? filter)
+        {
+            var sql = "SELECT * FROM Product";
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                sql += " WHERE Name LIKE @Filter";
+            }
+            using var connection = _context.CreateConnection();
+            return await connection.QueryAsync<Product>(sql, new { Filter = $"%{filter}%" });
+
+        }
     }
 }

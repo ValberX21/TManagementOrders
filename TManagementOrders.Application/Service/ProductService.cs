@@ -1,4 +1,5 @@
-﻿using TManagementOrders.Domain.Entities;
+﻿using System.Collections;
+using TManagementOrders.Domain.Entities;
 using TManagementOrders.Domain.Interfaces;
 using TManagementOrders.Domain.Interfaces.Repository;
 using TManagementOrders.Infrastructure.Repositories;
@@ -46,6 +47,11 @@ namespace TManagementOrders.Application.Service
         public async Task<Product> GetByNameAsync(string name)
         {
             return await _productRepository.GetByNameAsync(name);   
+        }
+
+        public async Task<IEnumerable<Product>> Filter(string? filter)
+        {
+            return await _productRepository.Filter(filter);          
         }
     }
 }

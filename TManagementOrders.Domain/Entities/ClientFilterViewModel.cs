@@ -3,6 +3,6 @@
     public class ClientFilterViewModel
     {
         public string? Filter { get; set; }
-        public List<Client> Clients { get; set; } = [];
+        public IEnumerable<Client> Clients { get; set; } = [];
     }
 }

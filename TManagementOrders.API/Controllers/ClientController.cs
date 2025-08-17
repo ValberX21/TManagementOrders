@@ -20,7 +20,7 @@ namespace TManagementOrders.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
-            List<Client> clientFilter = await _clientService.FilterClient(filter);
+            IEnumerable<Client> clientFilter = await _clientService.Filter(filter);
 
             var viewModel = new ClientFilterViewModel
             {

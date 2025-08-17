@@ -3,6 +3,6 @@
     public class ProductFilterViewModel
     {
         public string? Filter { get; set; }
-        public List<Product> Products { get; set; } = new();
+        public IEnumerable<Product> Products { get; set; } = [];
     }
 }

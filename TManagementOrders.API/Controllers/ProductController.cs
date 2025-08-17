@@ -20,14 +20,7 @@ namespace TManagementOrders.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string? filter)
         {
-            var clients = await _baseService.GetAllAsync();
-
-            var filteredClients = string.IsNullOrWhiteSpace(filter)
-                ? clients.ToList()
-                : clients
-                    .Where(c =>
-                        (!string.IsNullOrEmpty(c.Name) && c.Name.Contains(filter.Trim(), StringComparison.OrdinalIgnoreCase)))
-                    .ToList();
+            IEnumerable<Product> filteredClients = await _baseService.Filter(filter);
 
             var viewModel = new ProductFilterViewModel
             {

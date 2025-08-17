@@ -7,5 +7,6 @@
         Task<int> AddAsync(T property);
         Task<int> UpdateAsync(T property);
         Task DeleteAsync(int id);
+        Task<IEnumerable<T>> Filter(string? filter);
     }
 }
